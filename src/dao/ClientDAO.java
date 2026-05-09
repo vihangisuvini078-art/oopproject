@@ -3,28 +3,33 @@ package dao;
 import db.DBConnection;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import model.Client;
 
 public class ClientDAO {
 
-    public void addClient(String name, String contact, String address) {
+    public boolean addClient(Client client) {
+
         try {
+
             Connection con = DBConnection.getConnection();
 
-            String sql = "INSERT INTO clients(name, contact, address) VALUES (?, ?, ?)";
+            String sql = "INSERT INTO clients(name, contact, address) VALUES(?,?,?)";
+
             PreparedStatement pst = con.prepareStatement(sql);
 
-            pst.setString(1, name);
-            pst.setString(2, contact);
-            pst.setString(3, address);
+            pst.setString(1, client.getClientName());
+            pst.setString(2, client.getPhone());
+            pst.setString(3, client.getAddress());
 
-            pst.executeUpdate();
+            int rowsInserted = pst.executeUpdate();
+
+            return rowsInserted > 0;
 
         } catch (Exception e) {
+
             e.printStackTrace();
         }
-    }
-}/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 
+        return false;
+    }
+}
